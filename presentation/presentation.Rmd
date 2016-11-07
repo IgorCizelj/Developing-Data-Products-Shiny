@@ -1,0 +1,65 @@
+---
+title: "Population of US Cities Through History"
+author: "Igor Cizelj, PhD"
+date: "November 7, 2016"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Population of US Cities Through History
+
+```{r fig.width=8, fig.height=4,echo=FALSE}
+library(png)
+library(grid)
+img <- readPNG("./data/image.PNG")
+grid.raster(img)
+```
+
+## Data Set and Shiny App
+
+- The Shiny App is deployed at [shinyapps.io](https://igorcizelj.shinyapps.io/HistUSCitiesPopulation/).
+
+- The data set used by the App is a compilation of US historical city populations decennially between 1850 and 2010, for a selection of states. The original data set can be found [here](https://github.com/cestastanford/historical-us-city-populations), which contains all US states from 1790 to 2010.
+
+- Use the slider to choose the Year (from 1850 to 2010, in increments of 10).
+
+- Use the dropdown menu to choose the State (CA, TX, NY, FL, IL, PA, OH, GA, MI, or NC). 
+
+- Given a Year and a State, the Shiny App displays the cities on the map, and color codes them based on the population.
+
+## Original Data
+
+```{r fig.width=8, fig.height=4,echo=TRUE}
+library(reshape)
+cityData <- read.csv("./data/fullData.csv",header = FALSE,
+                     skip=1,stringsAsFactors = FALSE)
+cityData <- cityData[,c(2:27,31,32)]
+names(cityData) <- c("State", "City", "CityState",
+                     as.character(seq(1790,2010,10)),"Lat","Long")    
+cityData <- melt(cityData, id = c("State","City",
+                                  "CityState","Lat","Long"))
+names(cityData)[c(6,7)] <- c("Year","Population")
+cityData$Year <- as.numeric(as.character(cityData$Year))
+cityData <- na.omit(cityData)
+head(cityData,n=2)
+```
+
+## Data Used by App
+
+```{r fig.width=8, fig.height=4,echo=TRUE}
+# Remove Cities with LatLong=0,0
+cityData <- cityData[which(cityData$Lat!=0 | cityData$Long!=0),]
+# Extract Only Data with Particular States
+cityData <- cityData[which(cityData$State %in% 
+                               c('CA','TX','NY','FL','IL',
+                                 'PA','OH','GA','MI','NC')),]
+# Extract Only Data with Year>=1850
+cityData <- cityData[which(cityData$Year>=1850),]
+# Extract Only Data with Population > 100
+cityData <- cityData[which(cityData$Population>100),]
+head(cityData,n=2)
+
+```
