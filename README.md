@@ -13,7 +13,7 @@ The files of the applications are:
 
 The application can be accessed here: https://igorcizelj.shinyapps.io/HistUSCitiesPopulation/
 
-The presentation about the application can be found here:
+The presentation about the application can be found here: http://rpubs.com/IgorCizelj/225231
 
 Additionally, the .Rmd file used to create the presentation can be found here: https://github.com/IgorCizelj/Developing-Data-Products-Shiny/blob/master/presentation/presentation.Rmd
 
